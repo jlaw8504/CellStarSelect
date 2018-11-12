@@ -1,0 +1,8 @@
+# Image Files
+*.stk
+*.nd2
+*.tif
+
+# Output folder
+*/output
+..gitignore.un~

@@ -1,0 +1,10 @@
+function maxIntLoopWithTwo(directory, filePattern, maxIntMatrix1, maxIntMatrix2)
+%%Display the segmented cells in a stack of maximum intensity projections
+cd(directory)
+fileStruct = dir(filePattern);
+files = sort_nat({fileStruct(:).name});
+
+for n = 1:size(maxIntMatrix1, 3)
+    load(files{n}, 'snakes');
+    displaySnakesWithTwo(snakes, maxIntMatrix1(:,:,n), maxIntMatrix2(:,:,n))
+end

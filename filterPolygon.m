@@ -1,0 +1,13 @@
+function filteredPolygon = filterPolygon(paddedPolygon, im)
+%%This function uses the binary mask in paddedPolygon to eliminate the
+%%background signal in the provided image and returns a cropped and
+%%filtered image.
+
+filteredImage = double(im) .* paddedPolygon;
+props = regionprops(paddedPolygon, 'BoundingBox');
+boundingBox = props.BoundingBox;
+filteredPolygon = filteredImage(...
+                                ceil(boundingBox(2)):...
+                                ceil(boundingBox(2)) + boundingBox(4) - 1,...
+                                ceil(boundingBox(1)):...
+                                ceil(boundingBox(1)) + boundingBox(3) - 1);
