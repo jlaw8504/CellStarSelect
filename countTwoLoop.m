@@ -1,4 +1,4 @@
-function totalCount = countTwoLoop(directory, filePattern,...
+function totalCount = countTwoLoop(Segdir, filePattern,...
     maxIntMatrix1, maxIntMatrix2)
 %%Count the number of segments with two spots in maxIntMatrix1 and
 %%maxIntMatrix2
@@ -6,7 +6,7 @@ function totalCount = countTwoLoop(directory, filePattern,...
 %Instantiate totalCount
 totalCount = 0;
 
-cd(directory)
+cd(Segdir) %go to segment directory
 fileStruct = dir(filePattern);
 files = sort_nat({fileStruct(:).name});
 

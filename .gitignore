@@ -2,7 +2,14 @@
 *.stk
 *.nd2
 *.tif
+*.png
 
 # Output folder
 */output
 ..gitignore.un~
+
+# MAT data files
+*.mat
+
+# Mac DS_store file
+.DS_store

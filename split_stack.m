@@ -1,6 +1,14 @@
 function split_stack(filename, output_directory)
 %%Split an image stack into individual images in the output directory
 
+%check if directory exists
+if ~(7 == exist(output_directory, 'dir'))
+    %if not, make the directory in the current directory
+    mkdir(output_directory);
+    warning('Creating %s in %s directory',...
+        output_directory, pwd);
+end
+
 stk_cell = bfopen(filename);
 im_stack = bf2mat(stk_cell);
 [~, basename, ~] = fileparts(filename);

@@ -1,6 +1,4 @@
-function parameters =  batchCellStar(...
-                            fullFilenamesCell,...
-                            destDirSeg, bgImageFullFilename)
+function parameters =  batchCellStar(transImageDir, filePattern, destDirSeg, bgImageFullFilename)
 %%Run CellStar in batch mode
 % Inputs :
 %       fullFilenames : Cell array containing the full filnames
@@ -19,6 +17,8 @@ parameters = DefaultParameters('precision', 7, 'avgCellDiameter', 95);
 parameters.debugLevel = 2;
 parameters.files.destinationDirectory = destDirSeg;
 parameters.files.background.imageFile = bgImageFullFilename;
+%parse the transImageDirectory for images
+fullFilenamesCell = parseFullFilenames(transImageDir, filePattern);
 parameters.files.imagesFiles = fullFilenamesCell;
 %specifiy the maximum number of clusters on current parpool profile
 clusterProfileStruct = parcluster;
