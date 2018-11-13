@@ -5,6 +5,7 @@ fileStruct = dir(filePattern);
 files = sort_nat({fileStruct(:).name});
 
 for n = 1:size(maxIntMatrix1, 3)
+    display(files{n});
     load(files{n}, 'snakes');
     displaySnakesWithTwo(snakes, maxIntMatrix1(:,:,n), maxIntMatrix2(:,:,n))
 end

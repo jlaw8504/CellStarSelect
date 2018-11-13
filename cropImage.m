@@ -1,4 +1,4 @@
-function croppedImage = cropImage(paddedPolygon, im)
+function [croppedImage, boundingBox] = cropImage(paddedPolygon, im)
 %Crop image using bounding box derived from paddedPolygon image
 
 props = regionprops(paddedPolygon, 'BoundingBox');
