@@ -18,7 +18,7 @@ function [ brightArray, snrArray ] = findBrightSpots( imgSpots, snrThreshold, im
 %% Calculate the mean and standard deviation of image background
 %Otsu Thresholding to remove foreground from background
 thresh = multithresh(img);
-img_nan = img;
+img_nan = double(img);
 img_nan(img_nan > thresh) = nan; %remove foreground with nans
 bg_std = std(img_nan(:), 'omitnan');
 bg_mean = mean(img_nan(:), 'omitnan');
