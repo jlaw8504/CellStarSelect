@@ -7,7 +7,7 @@ function [ brightArray, snrArray ] = findBrightSpots( imgSpots, snrThreshold, im
 %
 %       snrThreshold : The threshold value of the signal to noise ratio
 %
-%       img : Image plane. Usually maximum intensity projection.
+%       img : Image plane. Usually a maximum intensity projection.
 %
 %       regionSize : Integer value of the length/width of the square region
 %       used to crop the spot image.
@@ -32,10 +32,23 @@ end
 %% Instantiate brightArray and snrArray
 brightArray = zeros([size(imgSpots,1),1]);
 snrArray = zeros([size(imgSpots,1),1]);
+%% Determine if the img needs to be padded
+%if spots are close to edges in X and Y (padCheck doesn't check Z)
+needsPad = padCheck(size(img), imgSpots, halfRS);
+if needsPad
+    imgPad = padarray(img, [halfRS, halfRS], 'replicate', 'both');
+    padSpots = imgSpots + halfRS;
+end
 %% Loop through each spot for evaluation
 for n = 1:size(imgSpots, 1)
-    spotImg = img(imgSpots(n,1)-halfRS:imgSpots(n,1)+halfRS,...
-                  imgSpots(n,2)-halfRS:imgSpots(n,2)+halfRS);
+    if needsPad
+        spotImg = imgPad(padSpots(n,1)-halfRS:padSpots(n,1)+halfRS,...
+                         padSpots(n,2)-halfRS:padSpots(n,2)+halfRS);
+    else
+        spotImg = img(imgSpots(n,1)-halfRS:imgSpots(n,1)+halfRS,...
+                      imgSpots(n,2)-halfRS:imgSpots(n,2)+halfRS);
+    end
+    
     spotBgSub = spotImg - bg_mean;
     spotSNR = mean(spotBgSub(:))/bg_std;
     snrArray(n,1) = spotSNR;

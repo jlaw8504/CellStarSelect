@@ -34,13 +34,13 @@ spotStructArray.snrThreshold = 30;
 %Region Size (side of a square) for filtering out one foci from another
 spotStructArray.regionSize = 7;
 
-%% Split the trans stacks into individual images
-splitStack(transFilename, spotStructArray.transOutDir)
-
-%% Run Cell star on all of the individual images
-spotStructArray.parameters =  batchCellStar(...
-    spotStructArray.transOutDir, spotStructArray.filePattern,...
-    spotStructArray.destDirSeg, spotStructArray.transBgFullFilename);
+% %% Split the trans stacks into individual images
+% splitStack(transFilename, spotStructArray.transOutDir)
+% 
+% %% Run Cell star on all of the individual images
+% spotStructArray.parameters =  batchCellStar(...
+%     spotStructArray.transOutDir, spotStructArray.filePattern,...
+%     spotStructArray.destDirSeg, spotStructArray.transBgFullFilename);
 
 %% Parse fluorescent image stacks and convert to matrices
 %since GFP and RFP MUST HAVE THE SAME NUMBER of IMAGE PLANES!!!
@@ -83,9 +83,9 @@ for n = 1:size(im1Mat,3)/spotStructArray.zsteps
     spotStructArray.snakes{n} = data.snakes;
     
     %% Locate cells with two foci in each channel
-    [img1Spots, img2Spots] = locateTwoSpotImages(data.snakes, mip1, mip2);
+    [img1Spots, img2Spots, xyList, polygonList] = ...
+        locateTwoSpotImages(data.snakes, mip1, mip2);
     if isempty(img1Spots)
-        display(sprintf('No two-spot snakes found in %d', n));
         continue
     end
     brightArray1 = zeros([size(img1Spots,1),1]);
@@ -121,7 +121,8 @@ for n = 1:size(im1Mat,3)/spotStructArray.zsteps
     if sum(filterArray) > 0
         img1Brights = bp1(filterArray,:);
         img2Brights = bp2(filterArray,:);
-        display('I found some to record!');
+        spotStructArray.xyList{n} = xyList(filterArray(1:2:end));
+        spotStructArray.polygonList{n} = polygonList(filterArray(1:2:end));
     else
         continue
     end

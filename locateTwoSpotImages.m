@@ -1,4 +1,4 @@
-function [img1Spots, img2Spots] = locateTwoSpotImages(snakes, im1, im2)
+function [img1Spots, img2Spots, xyList, polygonList] = locateTwoSpotImages(snakes, im1, im2)
 %%Find the X and Y positions of each detected foci
 %
 %  Inputs : 
@@ -15,6 +15,9 @@ function [img1Spots, img2Spots] = locateTwoSpotImages(snakes, im1, im2)
  %Instantiate img1Spots and img2Spots matrices
  img1Spots = [];
  img2Spots = [];
+ xyList = {};
+ polygonList = {};
+ cnt = 1;
 for n = 1:numel(snakes)
     inPolygon = snakes{n}.inPolygon;
     inPolygonXY = snakes{n}.inPolygonXY;
@@ -24,6 +27,10 @@ for n = 1:numel(snakes)
     ptSrcImg1  = advPointSourceDetection(noisedPolygon1, 2, 0);
     ptSrcImg2 = advPointSourceDetection(noisedPolygon2, 2, 0);
     if sum(ptSrcImg1(:)) == 2 && sum(ptSrcImg2(:)) == 2
+        %store the inPolygonXY and inPolygon variables
+        xyList{cnt} = inPolygonXY;
+        polygonList{cnt} = inPolygon;
+        cnt = cnt + 1;
         %pad the ptSrcImag1 back to the original image size
         crop1XY = [ceil(boundBox1(2)), ceil(boundBox1(1))];
         padPtImg1 = padPolygon(ptSrcImg1, crop1XY, size(im1));
