@@ -34,16 +34,16 @@ spotStructArray.snrThreshold = 30;
 %Region Size (side of a square) for filtering out one foci from another
 spotStructArray.regionSize = 7;
 
-% %% Split the trans stacks into individual images
-% splitStack(transFilename, spotStructArray.transOutDir)
-% 
-% %% Run Cell star on all of the individual images
-% spotStructArray.parameters =  batchCellStar(...
-%     spotStructArray.transOutDir, spotStructArray.filePattern,...
-%     spotStructArray.destDirSeg, spotStructArray.transBgFullFilename);
+%% Split the trans stacks into individual images
+splitStack(transFilename, spotStructArray.transOutDir)
 
-%% Parse fluorescent image stacks and convert to matrices
-%since GFP and RFP MUST HAVE THE SAME NUMBER of IMAGE PLANES!!!
+%% Run Cell star on all of the individual images
+spotStructArray.parameters =  batchCellStar(...
+    spotStructArray.transOutDir, spotStructArray.filePattern,...
+    spotStructArray.destDirSeg, spotStructArray.transBgFullFilename);
+
+% Parse fluorescent image stacks and convert to matrices
+since GFP and RFP MUST HAVE THE SAME NUMBER of IMAGE PLANES!!!
 info1 = imfinfo(stack1Filename);
 num_images = numel(info1);
 %pre-allocate matrices
