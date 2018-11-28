@@ -15,6 +15,11 @@ spotStructArray.filePattern = strcat(transBasename,'*', transExt);
 %Root Directory
 spotStructArray.rootDir = pwd;
 
+%Stack filenames
+spotStructArray.transFilename = transFilename;
+spotStructArray.stack1Filename = stack1Filename;
+spotStructArray.stack2Filename = stack2Filename;
+
 %destDirSeg : destination of segmentation images and mat files
 %By default put that information inside the transOutDir in a folder called
 %segments
@@ -34,16 +39,16 @@ spotStructArray.snrThreshold = 30;
 %Region Size (side of a square) for filtering out one foci from another
 spotStructArray.regionSize = 7;
 
-%% Split the trans stacks into individual images
-splitStack(transFilename, spotStructArray.transOutDir)
+% %% Split the trans stacks into individual images
+% splitStack(transFilename, spotStructArray.transOutDir)
+% 
+% %% Run Cell star on all of the individual images
+% spotStructArray.parameters =  batchCellStar(...
+%     spotStructArray.transOutDir, spotStructArray.filePattern,...
+%     spotStructArray.destDirSeg, spotStructArray.transBgFullFilename);
 
-%% Run Cell star on all of the individual images
-spotStructArray.parameters =  batchCellStar(...
-    spotStructArray.transOutDir, spotStructArray.filePattern,...
-    spotStructArray.destDirSeg, spotStructArray.transBgFullFilename);
-
-% Parse fluorescent image stacks and convert to matrices
-since GFP and RFP MUST HAVE THE SAME NUMBER of IMAGE PLANES!!!
+%% Parse fluorescent image stacks and convert to matrices
+% since GFP and RFP MUST HAVE THE SAME NUMBER of IMAGE PLANES!!!
 info1 = imfinfo(stack1Filename);
 num_images = numel(info1);
 %pre-allocate matrices
