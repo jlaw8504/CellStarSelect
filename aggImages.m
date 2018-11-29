@@ -26,6 +26,8 @@ allDataCell(1,7) = {'subTrans'};
 %% Loop through all files again to place the data in allDataCell
 %instantiate counter
 cnt = 2; % to prevent label row overwrite
+%% Waitbar
+h = waitbar(0, 'Parsing MAT files and images now');
 for n = 1:numel(matFiles)
     fullFilename = fullfile(matFiles(n).folder, matFiles(n).name);
     load(fullFilename, 'spotStructArray');
@@ -37,14 +39,16 @@ for n = 1:numel(matFiles)
     for i = 1:(size(spotStructArray.dataCell,1)-1)
         allDataCell(cnt,1:4) = spotStructArray.dataCell(i+1,:);
         polyIdx = ceil(allDataCell{cnt,1}(3)/spotStructArray.zsteps);
+        xyPolyList = spotStructArray.xyList{polyIdx};
+        inPolyList = spotStructArray.polygonList{polyIdx};
         try %Catch an indexing error when polyIdx changes to reset idx to 1
-            xyPoly = spotStructArray.xyList{polyIdx}{idx};
-            inPoly = spotStructArray.polygonList{polyIdx}{idx};
+            xyPoly = xyPolyList{idx}; %error since idx is automatically 2 to start, need to flip this around?
+            inPoly = inPolyList{idx};
             idx = idx + 1;
         catch
             idx = 1;
-            xyPoly = spotStructArray.xyList{polyIdx}{idx};
-            inPoly = spotStructArray.polygonList{polyIdx}{idx};
+            xyPoly = xyPolyList{idx};
+            inPoly = inPolyList{idx};
         end
         %% Create 3D filter
         padPoly = padPolygon(inPoly, xyPoly, size(stack1(:,:,1)));
@@ -53,19 +57,19 @@ for n = 1:numel(matFiles)
             polyIdx*spotStructArray.zsteps;
         %% Filter and crop images
         zStack1 = stack1(:,:,planes) .* stackPoly;
-        subStack1 = zStack1(xyPoly(1):xyPoly(1)+size(inPoly,1),...
-            xyPoly(2):xyPoly(2)+size(inPoly,2),:);
+        subStack1 = zStack1(xyPoly(1):xyPoly(1)+size(inPoly,1)-1,...
+            xyPoly(2):xyPoly(2)+size(inPoly,2)-1,:);
         zStack2 = stack2(:,:,planes) .* stackPoly;
-        subStack2 = zStack2(xyPoly(1):xyPoly(1)+size(inPoly,1),...
-            xyPoly(2):xyPoly(2)+size(inPoly,2),:);
+        subStack2 = zStack2(xyPoly(1):xyPoly(1)+size(inPoly,1)-1,...
+            xyPoly(2):xyPoly(2)+size(inPoly,2)-1,:);
         subTrans = trans(:,:,polyIdx) .* padPoly;
-        subTrans = subTrans(xyPoly(1):xyPoly(1)+size(inPoly,1),...
-            xyPoly(2):xyPoly(2)+size(inPoly,2));
+        subTrans = subTrans(xyPoly(1):xyPoly(1)+size(inPoly,1)-1,...
+            xyPoly(2):xyPoly(2)+size(inPoly,2)-1);
         %% Correct addDataCell Coordinates
         for j = 1:4
             newCoords = allDataCell{cnt,j} - ...
-                [xyPoly(1), ...
-                xyPoly(2), ...
+                [xyPoly(1)-1, ...
+                xyPoly(2)-1, ...
                 ((polyIdx -1 ) * spotStructArray.zsteps),...
                 0];
             allDataCell(cnt,j) = {newCoords};
@@ -74,6 +78,9 @@ for n = 1:numel(matFiles)
         allDataCell{cnt,6} = subStack2;
         allDataCell{cnt,7} = subTrans;
         cnt = cnt +1;
+        h = waitbar(cnt-1/num);
     end
 end
+%% Close waitbar
+close(h);
 end
