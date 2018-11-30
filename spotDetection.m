@@ -39,13 +39,13 @@ spotStructArray.snrThreshold = 30;
 %Region Size (side of a square) for filtering out one foci from another
 spotStructArray.regionSize = 7;
 
-% %% Split the trans stacks into individual images
-% splitStack(transFilename, spotStructArray.transOutDir)
-% 
-% %% Run Cell star on all of the individual images
-% spotStructArray.parameters =  batchCellStar(...
-%     spotStructArray.transOutDir, spotStructArray.filePattern,...
-%     spotStructArray.destDirSeg, spotStructArray.transBgFullFilename);
+%% Split the trans stacks into individual images
+splitStack(transFilename, spotStructArray.transOutDir)
+
+%% Run Cell star on all of the individual images
+spotStructArray.parameters =  batchCellStar(...
+    spotStructArray.transOutDir, spotStructArray.filePattern,...
+    spotStructArray.destDirSeg, spotStructArray.transBgFullFilename);
 
 %% Parse fluorescent image stacks and convert to matrices
 % since GFP and RFP MUST HAVE THE SAME NUMBER of IMAGE PLANES!!!
@@ -126,8 +126,8 @@ for n = 1:size(im1Mat,3)/spotStructArray.zsteps
     if sum(filterArray) > 0
         img1Brights = bp1(filterArray,:);
         img2Brights = bp2(filterArray,:);
-        spotStructArray.xyList{n} = xyList(filterArray(1:2:end));
-        spotStructArray.polygonList{n} = polygonList(filterArray(1:2:end));
+        xyBright = xyList(filterArray(1:2:end));
+        polyBright = polygonList(filterArray(1:2:end));
     else
         continue
     end
@@ -146,6 +146,10 @@ for n = 1:size(im1Mat,3)/spotStructArray.zsteps
         %image 2 spot 2
         img2Brights(j+1,3) = ((n-1)*spotStructArray.zsteps)+img2Brights(j+1,3);
         spotStructArray.dataCell{cnt+1,4} = img2Brights(j+1,:);
+        %Index the xyPoly and inPoly variables
+        %adjust index since there are half values as img1Brights
+        spotStructArray.xyList{cnt} = xyBright{ceil(j/2)};
+        spotStructArray.polygonList{cnt} = polyBright{ceil(j/2)};
         %update dataCell counter
         cnt = cnt + 1;
     end

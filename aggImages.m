@@ -35,36 +35,28 @@ for n = 1:numel(matFiles)
     stack1 = readTiffStack(fullfile(spotStructArray.rootDir, spotStructArray.stack1Filename));
     stack2 = readTiffStack(fullfile(spotStructArray.rootDir, spotStructArray.stack2Filename));
     trans = readTiffStack(fullfile(spotStructArray.rootDir, spotStructArray.transFilename));
-    idx = 1; %index for snakes(binary masks) in single trans image
     for i = 1:(size(spotStructArray.dataCell,1)-1)
         allDataCell(cnt,1:4) = spotStructArray.dataCell(i+1,:);
+        %Trans image plan index, AKA zstack index
         polyIdx = ceil(allDataCell{cnt,1}(3)/spotStructArray.zsteps);
-        xyPolyList = spotStructArray.xyList{polyIdx};
-        inPolyList = spotStructArray.polygonList{polyIdx};
-        try %Catch an indexing error when polyIdx changes to reset idx to 1
-            xyPoly = xyPolyList{idx}; %error since idx is automatically 2 to start, need to flip this around?
-            inPoly = inPolyList{idx};
-            idx = idx + 1;
-        catch
-            idx = 1;
-            xyPoly = xyPolyList{idx};
-            inPoly = inPolyList{idx};
-        end
+        %Pull out all xyPolys and inPolys for that zstack index
+        xyPoly = spotStructArray.xyList{i};
+        inPoly = spotStructArray.polygonList{i};
         %% Create 3D filter
-        padPoly = padPolygon(inPoly, xyPoly, size(stack1(:,:,1)));
-        stackPoly = repmat(padPoly, [1,1,spotStructArray.zsteps]);
+        %padPoly = padPolygon(inPoly, xyPoly, size(stack1(:,:,1)));
+        %stackPoly = repmat(padPoly, [1,1,spotStructArray.zsteps]);
         planes = ((polyIdx-1)*spotStructArray.zsteps)+1:...
             polyIdx*spotStructArray.zsteps;
-        %% Filter and crop images
-        zStack1 = stack1(:,:,planes) .* stackPoly;
-        subStack1 = zStack1(xyPoly(1):xyPoly(1)+size(inPoly,1)-1,...
-            xyPoly(2):xyPoly(2)+size(inPoly,2)-1,:);
-        zStack2 = stack2(:,:,planes) .* stackPoly;
-        subStack2 = zStack2(xyPoly(1):xyPoly(1)+size(inPoly,1)-1,...
-            xyPoly(2):xyPoly(2)+size(inPoly,2)-1,:);
-        subTrans = trans(:,:,polyIdx) .* padPoly;
-        subTrans = subTrans(xyPoly(1):xyPoly(1)+size(inPoly,1)-1,...
-            xyPoly(2):xyPoly(2)+size(inPoly,2)-1);
+        %% Crop images
+        %zStack1 = stack1(:,:,planes) .* stackPoly;
+        subStack1 = stack1(xyPoly(1):xyPoly(1)+size(inPoly,1)-1,...
+            xyPoly(2):xyPoly(2)+size(inPoly,2)-1,planes);
+        %zStack2 = stack2(:,:,planes) .* stackPoly;
+        subStack2 = stack2(xyPoly(1):xyPoly(1)+size(inPoly,1)-1,...
+            xyPoly(2):xyPoly(2)+size(inPoly,2)-1,planes);
+        %subTrans = trans(:,:,polyIdx) .* padPoly;
+        subTrans = trans(xyPoly(1):xyPoly(1)+size(inPoly,1)-1,...
+            xyPoly(2):xyPoly(2)+size(inPoly,2)-1, polyIdx);
         %% Correct addDataCell Coordinates
         for j = 1:4
             newCoords = allDataCell{cnt,j} - ...
@@ -78,7 +70,7 @@ for n = 1:numel(matFiles)
         allDataCell{cnt,6} = subStack2;
         allDataCell{cnt,7} = subTrans;
         cnt = cnt +1;
-        h = waitbar(cnt-1/num);
+        waitbar(cnt/num);
     end
 end
 %% Close waitbar
