@@ -34,7 +34,7 @@ spotStructArray.transBgFullFilename = transBgFullFilename;
 spotStructArray.zsteps = 7;
 
 %Signal to Noise ratio threshold
-spotStructArray.snrThreshold = 30;
+spotStructArray.snrThreshold = 15;
 
 %Region Size (side of a square) for filtering out one foci from another
 spotStructArray.regionSize = 7;
@@ -74,6 +74,8 @@ for n = 1:size(im1Mat,3)/spotStructArray.zsteps
     mip1 = max(imgStack1, [], 3);
     mip2 = max(imgStack2, [], 3);
     %load the correct snakes file from the CellStar segmentation
+    %put in a try catch loop in case no segments were found for that set
+    try
     if n < 10
         data = load(strcat(spotStructArray.destDirSeg, filesep,...
             transBasename, '_00', num2str(n), '_segmentation.mat'), 'snakes');
@@ -83,6 +85,9 @@ for n = 1:size(im1Mat,3)/spotStructArray.zsteps
     elseif n < 1000
         data = load(strcat(spotStructArray.destDirSeg, filesep,...
             transBasename, '_', num2str(n), '_segmentation.mat'), 'snakes');
+    end
+    catch
+        continue
     end
     %save snakes into the structure array
     spotStructArray.snakes{n} = data.snakes;

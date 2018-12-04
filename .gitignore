@@ -13,3 +13,5 @@
 
 # Mac DS_store file
 .DS_store
+# Thumbs.db files
+Thumbs.db
