@@ -1,4 +1,4 @@
-function [subAll, H] = makeHeatmap(dataCell, pixelSize, spbChannel)
+function [X, Y, H] = makeHeatmap(dataCell, pixelSize, spbChannel)
 %makeHeatmap Make a heatmap from coordinate data in the dataCell array
 %   Input :
 %       dataCell : The cell array outputted by aggImages function
@@ -9,7 +9,11 @@ function [subAll, H] = makeHeatmap(dataCell, pixelSize, spbChannel)
 %       variable contains images of the spindle pole bodies (SPBs).
 %
 %   Output :
-%       heatMat : A two-dimensional matrix that contains the heatmap data.
+%       subAll : A two-dimensional matrix that contains the heatmap data.
+%       Each row is the [Y X] distance of the kinetochore spot to the
+%       corresponding spindle pole body.
+%
+%       H : The heat map matrix created by dsearchn.
 
 %% Loop over data in dataCell
 %pre-allocate sub1 and sub2 matrices
@@ -28,7 +32,6 @@ for n = 2:size(dataCell,1)
     if distSpt1 > altDistSpt1 && distSpt2 > altDistSpt2
         ch2spt1 = dataCell{n,4};
         ch2spt2 = dataCell{n,3};
-        disp('I flipped these!');
     end
     %% Assign spots to kinet or spb variables
     if spbChannel == 1
@@ -91,14 +94,31 @@ for n = 2:size(dataCell,1)
 %     waitforbuttonpress;
 %     close(h);
 end
+%% Create gridspace for heatmap
 xDim = linspace(2*(-pixelSize), 27*pixelSize, 31);
 yDim = linspace(pixelSize*(-15), pixelSize*(15), 31);
 H = zeros(length(yDim),length(xDim));
-subAll = [sub1;sub2];
-for l = 1:size(subAll,1)
-    countX = dsearchn(xDim', abs(subAll(l,2)));
-    countY = dsearchn(yDim', subAll(l,1));
+%% Filter the subAll variable of outliers using deafult MAD criterion
+subAll = [sub1; sub2];
+absAll = abs(subAll);
+outliers = isoutlier(absAll);
+allOut = outliers(:,1) & outliers(:,2);
+while sum(allOut) > 0
+    absAll = absAll(~allOut,:);
+    outliers = isoutlier(absAll);
+    allOut = outliers(:,1) | outliers(:,2);
+end
+X = absAll(~allOut,2);
+Y = absAll(~allOut,1);
+
+for l = 1:size(X,1)
+    countX = dsearchn(xDim', X(l));
+    countY = dsearchn(yDim', Y(l));
     H(countY,countX) = H(countY,countX) + 1 ;
+end
+%% Mirror in Y
+for n = 1:16
+    H(n,:) = H((32-n),:);
 end
 %% Create the heatmap
 % code taken from Matthew Larson's Heatmap make program 

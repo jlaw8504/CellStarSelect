@@ -1,6 +1,7 @@
 function filteredCell = filterSlength(dataCell, spbChannel, spindleBounds, zTilt, pixelSize)
 %filterSlength Filter a cell array produced by CellStarSelect pipeline
-%based on spindle length
+%based on spindle length, ztilt, and proximity to image edge. Foci within 5
+%pixels of image edge will be discarded.
 %   Inputs :
 %       dataCell : The cell array outputted by aggImages function
 %
@@ -32,11 +33,23 @@ end
 %catch the labels row
 tiltArray = ones([1, size(dataCell,1)]);
 distArray = ones([1, size(dataCell,1)]);
+edgeArray = ones([1, size(dataCell,1)]); %for catching spots close to edge of image
 for n=2:size(dataCell,1)
     subArray = dataCell{n,cols(1)} - dataCell{n, cols(2)};
     tiltArray(n-1) = subArray(3) <= zTilt;
     distance = norm(subArray(1:2)) * pixelSize;
     distArray(n-1) = distance >= spindleBounds(1) & distance <= spindleBounds(2);
+    %% Check for distance of foci to edge
+    %gather all X coords
+    xCoords = zeros([1,4]);
+    yCoords = zeros([1,4]);
+    for i = 1:4
+        xCoords(i) = dataCell{n,i}(2) >= 5 &...
+                     dataCell{n,i}(2) <= (size(dataCell{n,5},2)-5);
+        yCoords(i) = dataCell{n,i}(1) >= 5 &...
+                     dataCell{n,i}(1) <= (size(dataCell{n,5},1)-5);
+        edgeArray(n) = sum([xCoords, yCoords]) == 8;
+    end
 end
-filterArray = tiltArray & distArray;
+filterArray = tiltArray & distArray & edgeArray;
 filteredCell = dataCell(filterArray,:);
