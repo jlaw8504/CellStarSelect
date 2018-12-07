@@ -1,4 +1,4 @@
-function [fwhmX, fwhmY, rsq] = calcFwhm(fociIm)
+function [fwhm, rsq] = calcFwhm(fociIm)
 %%clacFwhm Calculate the full-width half-max in X and Y of an image of a
 %%foci
 %% parse the middle 7 columns (X) from fociIm and middle 15 rows (Y)
@@ -13,14 +13,13 @@ midFoci = fociIm(mid-7:mid+7, mid-3:mid+3);
 sumY = sum(midFoci,2);
 subVal = mean([sumY(1), sumY(end)]);
 subY = sumY - subVal;
+X = 0:length(subY) - 1;
 %% Fit 2D gaussian to fociIm
-[fitresult, gof] = fit2dGauss(0:size(fociIm,2)-1, 0:size(fociIm,1)-1, midFoci);
+[fitresult, gof] = customGauss1fit(X, subY);
 %% Extract sigmaX and sigmaY
 coefficients = coeffvalues(fitresult);
-sigmaX = coefficients(end-1);
-sigmaY = coefficients(end);
+sigma = coefficients(end);
 %% Convert to FWHM
-fwhmX = sigmaX*2.355;
-fwhmY = sigmaY*2.355;
+fwhm = sigma*2.355;
 %% Extract R squared value
 rsq = gof.rsquare;
