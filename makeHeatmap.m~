@@ -48,9 +48,8 @@ for n = 2:size(dataCell,1)
         error('Variable spbChannel must be either 1 or 2');
     end
     %% Try distance to spindle axis method
-    %[newKinet1(n-1,:), newKinet2(n-1,:)] = sAxisYX(spb1,spb2, kinet1, kinet2);
-    % This method does appear to give same distance as rotation method
-    % But you lose out on 
+    [newKinet1(n-1,:), newKinet2(n-1,:)] = sAxisYX(spb1,spb2, kinet1, kinet2);
+    % This method does appear to give same abs
     %% Determine left-most spb spot
     if spb1(2) < spb2(2)
         subSpot = spb1;

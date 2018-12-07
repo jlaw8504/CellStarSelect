@@ -19,15 +19,15 @@ function [fitresult, gof] = customGauss1fit(X, subY)
 %a = scaling factor (peak intensity value)
 %mu = center position of the curve
 %sigma = spread of the curve
-[xData, yData] = prepareCurveData( X, subY );
+[xData, yData] = prepareCurveData( X', subY );
 
 % Set up fittype and options.
 ft = fittype( 'a*exp((-1/2)*((x-mu)/sigma)^2)', 'independent', 'x', 'dependent', 'y' );
 opts = fitoptions( 'Method', 'NonlinearLeastSquares' );
 opts.Display = 'Off';
-opts.Lower = [0 0 0];
-opts.StartPoint = [max(subY) size(subY)/2 1];
-opts.Upper = [max(subY)*3 size(subY) size(subY)];
+opts.Lower = [0, 0, 0];
+opts.StartPoint = [max(subY), length(subY)/2, 1];
+opts.Upper = [max(subY)*3, length(subY), length(subY)];
 
 % Fit model to data.
 [fitresult, gof] = fit( xData, yData, ft, opts );

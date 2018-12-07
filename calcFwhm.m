@@ -6,13 +6,14 @@ function [fwhm, rsq] = calcFwhm(fociIm)
 if mod(size(fociIm,1), 2) == 0
     mid = (size(fociIm,1))/2;
 else
-    mid = size(fociIM,1) + 1/2;
+    mid = (size(fociIm,1) + 1)/2;
 end
 midFoci = fociIm(mid-7:mid+7, mid-3:mid+3);
 %% Collapse midFoci into 1D array and process for fitting
 sumY = sum(midFoci,2);
 subVal = mean([sumY(1), sumY(end)]);
 subY = sumY - subVal;
+subY(subY < 0) = 0;
 X = 0:length(subY) - 1;
 %% Fit 2D gaussian to fociIm
 [fitresult, gof] = customGauss1fit(X, subY);

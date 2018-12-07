@@ -10,7 +10,7 @@ function heightArray = spotHeight(dataCell, regionSize, spbChannel)
 
 %% Loop over data in dataCell
 %pre-allocate structural array
-num = size(dataCell,1);
+num = size(dataCell,1) - 1;
 heightArray.kHeights1 = zeros([num, 1]);
 heightArray.kHeights2 = zeros([num, 1]);
 heightArray.sHeights1 = zeros([num, 1]);
@@ -20,7 +20,7 @@ heightArray.kHeightsRsq2 = zeros([num, 1]);
 heightArray.sHeightsRsq1 = zeros([num, 1]);
 heightArray.sHeightsRsq2 = zeros([num, 1]);
 %% Set up waitbar
-h = waitbar(0, 'Calculating 2D Gaussians now...');
+h = waitbar(0, 'Calculating 1D Gaussians now...');
 for n = 2:size(dataCell,1)
     %% Parse coordinate data
     ch1spt1 = dataCell{n,1};
@@ -50,15 +50,15 @@ for n = 2:size(dataCell,1)
     imKinet2 = extractFoci(kinet2, kinetIm, regionSize);
     imSpb1 = extractFoci(spb1, spbIm, regionSize);
     imSpb2 = extractFoci(spb2, spbIm, regionSize);
-    fig = figure;
-    subplot(2,4,1);
-    imshow(imKinet1, []);
-    subplot(2,4,2);
-    imshow(imKinet2, []);
-    subplot(2,4,3);
-    imshow(imSpb1, []);
-    subplot(2,4,4);
-    imshow(imSpb2, []);
+%     fig = figure;
+%     subplot(2,4,1);
+%     imshow(imKinet1, []);
+%     subplot(2,4,2);
+%     imshow(imKinet2, []);
+%     subplot(2,4,3);
+%     imshow(imSpb1, []);
+%     subplot(2,4,4);
+%     imshow(imSpb2, []);
     %% Rotate the foci images
     spbSub = spb1 - spb2;
     theta = atan2(spbSub(1), spbSub(2));
@@ -66,34 +66,34 @@ for n = 2:size(dataCell,1)
     rotKinet2 = imrotate(imKinet2, rad2deg(theta));
     rotSpb1 = imrotate(imSpb1, rad2deg(theta));
     rotSpb2 = imrotate(imSpb2, rad2deg(theta));
-    subplot(2,4,5);
-    imshow(rotKinet1, []);
-    subplot(2,4,6);
-    imshow(rotKinet2, []);
-    subplot(2,4,7);
-    imshow(rotSpb1, []);
-    subplot(2,4,8);
-    imshow(rotSpb2, []);
-    % Show original and rotated max projection images
-    og = figure;
-    subplot(2,2,1);
-    imshow(max(dataCell{n,5}, [], 3),[]);
-    subplot(2,2,2);
-    imshow(max(dataCell{n,6}, [], 3),[]);
-    rotKinet = imrotate(max(dataCell{n,5},[],3), rad2deg(theta));
-    rotSpb = imrotate(max(dataCell{n,6}, [], 3), rad2deg(theta));
-    subplot(2,2,3);
-    imshow(rotKinet, []);
-    subplot(2,2,4);
-    imshow(rotSpb, []);
-    waitforbuttonpress;
-    close(og);
-    close(fig);
+%     subplot(2,4,5);
+%     imshow(rotKinet1, []);
+%     subplot(2,4,6);
+%     imshow(rotKinet2, []);
+%     subplot(2,4,7);
+%     imshow(rotSpb1, []);
+%     subplot(2,4,8);
+%     imshow(rotSpb2, []);
+%     % Show original and rotated max projection images
+%     og = figure;
+%     subplot(2,2,1);
+%     imshow(max(dataCell{n,5}, [], 3),[]);
+%     subplot(2,2,2);
+%     imshow(max(dataCell{n,6}, [], 3),[]);
+%     rotKinet = imrotate(max(dataCell{n,5},[],3), rad2deg(theta));
+%     rotSpb = imrotate(max(dataCell{n,6}, [], 3), rad2deg(theta));
+%     subplot(2,2,3);
+%     imshow(rotKinet, []);
+%     subplot(2,2,4);
+%     imshow(rotSpb, []);
+%     waitforbuttonpress;
+%     close(og);
+%     close(fig);
     %% Calculate the FWHM of the rotated images
-    [heightArray.kHeights1(n), heightArray.kHeightsRsq1(n)] = calcFwhm(rotKinet1);
-    [heightArray.kHeights2(n), heightArray.kHeightsRsq2(n)] = calcFwhm(rotKinet2);
-    [heightArray.sHeights1(n), heightArray.sHeightsRsq1(n)] = calcFwhm(rotSpb1);
-    [heightArray.sHeights2(n), heightArray.sHeightsRsq2(n)] = calcFwhm(rotSpb2);
+    [heightArray.kHeights1(n-1), heightArray.kHeightsRsq1(n-1)] = calcFwhm(rotKinet1);
+    [heightArray.kHeights2(n-1), heightArray.kHeightsRsq2(n-1)] = calcFwhm(rotKinet2);
+    [heightArray.sHeights1(n-1), heightArray.sHeightsRsq1(n-1)] = calcFwhm(rotSpb1);
+    [heightArray.sHeights2(n-1), heightArray.sHeightsRsq2(n-1)] = calcFwhm(rotSpb2);
     %% Update waitbar
     waitbar(n/num);
 end
