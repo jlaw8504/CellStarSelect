@@ -1,5 +1,6 @@
-function [X, Y, H] = makeHeatmap(dataCell, pixelSize, spbChannel)
-%makeHeatmap Make a heatmap from coordinate data in the dataCell array
+function [X, Y] = parsePositions(dataCell, pixelSize, spbChannel)
+%parsePositions Parese the X and Y coordinates of kinetochore spots
+%relative to the spindle axis.
 %   Input :
 %       dataCell : The cell array outputted by aggImages function
 %
@@ -9,11 +10,9 @@ function [X, Y, H] = makeHeatmap(dataCell, pixelSize, spbChannel)
 %       variable contains images of the spindle pole bodies (SPBs).
 %
 %   Output :
-%       subAll : A two-dimensional matrix that contains the heatmap data.
-%       Each row is the [Y X] distance of the kinetochore spot to the
-%       corresponding spindle pole body.
+%       X : Array of X positions relative to spindle axis in nanometers.
 %
-%       H : The heat map matrix created by dsearchn.
+%       Y : Array of Y posiitons relatvie to spindle axis in nanometers
 
 %% Loop over data in dataCell
 %pre-allocate sub1 and sub2 matrices
@@ -50,7 +49,7 @@ for n = 2:size(dataCell,1)
     %% Try distance to spindle axis method
     %[newKinet1(n-1,:), newKinet2(n-1,:)] = sAxisYX(spb1,spb2, kinet1, kinet2);
     % This method does appear to give same distance as rotation method
-    % But you lose out on 
+    % But you lose out on directional information
     %% Determine left-most spb spot
     if spb1(2) < spb2(2)
         subSpot = spb1;
@@ -99,9 +98,9 @@ for n = 2:size(dataCell,1)
 %     close(h);
 end
 %% Create gridspace for heatmap
-xDim = -2*pixelSize:pixelSize:8*pixelSize;
-yDim = 0*pixelSize:pixelSize:10*pixelSize;
-H = zeros(length(yDim),length(xDim));
+xDim = -1.5*pixelSize:pixelSize:8.5*pixelSize;
+yDim = -0.5*pixelSize:pixelSize:4.5*pixelSize;
+h = zeros(length(yDim),length(xDim));
 %% Filter the subAll variable of outliers using deafult MAD criterion
 subAll = [sub1; sub2];
 absAll = abs(subAll);
@@ -114,38 +113,32 @@ while sum(allOut) > 0
 end
 X = absAll(~allOut,2);
 Y = absAll(~allOut,1);
-
-for l = 1:size(X,1)
-    countX = dsearchn(xDim', X(l));
-    countY = dsearchn(yDim', Y(l));
-    H(countY,countX) = H(countY,countX) + 1 ;
-end
-%% Mirror in Y
-for n = 1:(size(H,1)+1)/2
-    H(n,:) = H(((size(H,1))-n),:);
-end
-%% Create the heatmap
-% code taken from Matthew Larson's Heatmap make program 
-activedata = H;
-interpnumber = 2;
-activeinterp=interp2(activedata,interpnumber);%linear interpolate data
-activeinterp=activeinterp/max(max(activeinterp));%standardize to max=100%
-figure;
-%create new plot
-imagesc(activeinterp)
-xlabel('Distance (nm)')
-ylabel('Distance (nm)')
-%adjust axis labels
-xlabels = round(xDim);
-xlabels = arrayfun(@num2str, xlabels, 'UniformOutput', 0);
-ylabels = round(yDim);
-ylabels = arrayfun(@num2str, ylabels, 'UniformOutput', 0);
-set(gca,'XTick',1:(2^interpnumber):size(activeinterp,2))
-set(gca,'XTickLabel',xlabels)
-set(gca,'YTick',1:(2^interpnumber):size(activeinterp,1))
-set(gca,'YTickLabel',ylabels)
-colorbar
-colormap hot
-%colormap jet %remove % at the beginning of this line for jet (rainbow) colormap
-axis image
-
+% 
+% maxX = ceil(max(X)/pixelSize);
+% maxY = ceil(max(Y)/pixelSize);
+% hMat = zeros([maxY, maxX]);
+% 
+% for m = 1:maxY
+%     for n = 1:maxX
+%         filter = (X <= n*64.8) & (Y <= m*64.8);
+%         hMat(m,n) = sum(filter);
+%         X(filter) = nan;
+%         Y(filter) = nan;
+%     end
+% end
+% hFlip = flipud(hMat);
+% h = [hFlip;hMat];
+% figure;
+% imagesc(h);
+% colorbar;
+% colormap hot;
+% xticks = 0.5:1:maxX+0.5;
+% xvals = round((0:maxX)*64.8);
+% xlabels = arrayfun(@num2str, xvals, 'UniformOutput', 0);
+% yticks = 0.5:1:(maxY*2)+0.5;
+% yvals = fliplr(round((-maxY:maxY)*64.8));
+% ylabels = arrayfun(@num2str, yvals, 'UniformOutput', 0);
+% set(gca,'XTick',xticks)
+% set(gca,'XTickLabel',xlabels)
+% set(gca,'YTick', yticks)
+% set(gca,'YTickLabel',ylabels)
