@@ -4,9 +4,17 @@ function heightArray = spotHeight(dataCell, regionSize, spbChannel)
 %   Inputs :
 %       dataCell : The cell array outputted by aggImages function
 %
+%       regionSize : The length, in pixels, of the sides of the square
+%       region used to crop out the foci surrounding the brightest pixel.
+%       Must be at least 15 pixels.
+%
+%       spbChannel : 1 or 2. Specifies which fluorescent image channel
+%       contains images of the spindle pole bodies.
+%
 %   Outputs :
-%       spotHeights = Matrix of spot heights where each row is a record of
-%       [im1spot1, im1spot2, im2spot1, im2spot2].
+%       heightArray = Structural array containing the spot heights, in
+%       pixels, of the two kinetochore foci, the two SPB foci, and each
+%       foci's Gaussian fit R squared value for post hoc filtering.
 
 %% Loop over data in dataCell
 %pre-allocate structural array
@@ -19,6 +27,10 @@ heightArray.kHeightsRsq1 = zeros([num, 1]);
 heightArray.kHeightsRsq2 = zeros([num, 1]);
 heightArray.sHeightsRsq1 = zeros([num, 1]);
 heightArray.sHeightsRsq2 = zeros([num, 1]);
+%% Check that regionSize is at least 15 pixels
+if regionSize < 15
+    error('Set regionSize to value of 15 pixels or greater');
+end
 %% Set up waitbar
 h = waitbar(0, 'Calculating 1D Gaussians now...');
 for n = 2:size(dataCell,1)
