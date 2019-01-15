@@ -1,5 +1,5 @@
 function [fwhm, rsq] = calcFwhm(fociIm)
-%%clacFwhm Calculate the full-width half-max in X and Y of an image of a
+%%clacFwhm Calculate the full-width half-max in Y of an image of a
 %%foci
 %% parse the middle 7 columns (X) from fociIm and middle 15 rows (Y)
 %The foci are centered around the brightest pixel
