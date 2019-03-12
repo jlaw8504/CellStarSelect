@@ -13,7 +13,9 @@ function parameters =  batchCellStar(transImageDir, filePattern, destDirSeg, bgI
 %Initialize paramters structure array for CellStar segmentation
 %Given pixel size of ~64.5, an 'average' cell diameter of 95 equals
 %roughly 6 microns
-parameters = DefaultParameters('precision', 7, 'avgCellDiameter', 95);
+%UPDATE JANUARY 28, 2019, KEEPS PICKING SUBSTRUCTURES INSIDE CELLS
+%USING 140 PIXELS TO SKEW SELECTION HIGHER
+parameters = DefaultParameters('precision', 20, 'avgCellDiameter', 50);
 parameters.debugLevel = 2;
 parameters.files.destinationDirectory = destDirSeg;
 parameters.files.background.imageFile = bgImageFullFilename;
