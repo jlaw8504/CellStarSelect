@@ -34,7 +34,7 @@ spotStructArray.transBgFullFilename = transBgFullFilename;
 spotStructArray.zsteps = 7;
 
 %Signal to Noise ratio threshold
-spotStructArray.snrThreshold = 15;
+spotStructArray.snrThreshold = 3;
 
 %Region Size (side of a square) for filtering out one foci from another
 spotStructArray.regionSize = 7;

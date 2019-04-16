@@ -36,9 +36,9 @@ distArray = ones([1, size(dataCell,1)]);
 edgeArray = ones([1, size(dataCell,1)]); %for catching spots close to edge of image
 for n=2:size(dataCell,1)
     subArray = dataCell{n,cols(1)} - dataCell{n, cols(2)};
-    tiltArray(n-1) = subArray(3) <= zTilt;
+    tiltArray(n) = subArray(3) <= zTilt;
     distance = norm(subArray(1:2)) * pixelSize;
-    distArray(n-1) = distance >= spindleBounds(1) & distance <= spindleBounds(2);
+    distArray(n) = (distance >= spindleBounds(1)) & (distance <= spindleBounds(2));
     %% Check for distance of foci to edge
     %gather all X coords
     xCoords = zeros([1,4]);

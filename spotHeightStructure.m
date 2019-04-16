@@ -1,5 +1,5 @@
 function s = spotHeightStructure(matPattern, spbChannel, spindleBounds, zTilt, pixelSize, regionSize)
-%%cse4Structure Parses the cellStarSelect MAT-files and analyzes the cse4
+%%spotHeightStructure Parses the cellStarSelect MAT-files and analyzes the cse4
 %%and spindle pole body foci.
 %
 %   inputs :
@@ -62,6 +62,8 @@ s.regionSize = regionSize;
 s.allDataCell = aggImages(s.matPattern);
 s.filterCell = filterSlength(...
     s.allDataCell, s.spbChannel, s.spindleBounds, s.zTilt, s.pixelSize);
+s.filterCell = filterPosition(s.filterCell, s.spbChannel, 5);
+s.filterCell = filterFoci(s.filterCell);
 s.HA = spotHeight(s.filterCell, s.regionSize, s.spbChannel);
 %% Kinetochore and SPB foci array height outlier removal
 % Collect kinetochore foci heights in single array
@@ -70,6 +72,8 @@ s.kHnm = s.kH * pixelSize;
 % Collect SPB foci heights in single array
 s.sH = [s.HA.sHeights1; s.HA.sHeights2];
 s.sHnm = s.sH * pixelSize;
+% Convert spindle lengths to nm
+s.sLengthsnm = s.HA.sLengths * s.pixelSize;
 %filter out outliers using while loop and ~isoutlier
 s.kHnoOutnm = noArrayOutliers(s.kHnm);
 s.sHnoOutnm = noArrayOutliers(s.sHnm);
