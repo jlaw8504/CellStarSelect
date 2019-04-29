@@ -15,7 +15,7 @@ function parameters =  batchCellStar(transImageDir, filePattern, destDirSeg, bgI
 %roughly 6 microns
 %UPDATE JANUARY 28, 2019, KEEPS PICKING SUBSTRUCTURES INSIDE CELLS
 %USING 140 PIXELS TO SKEW SELECTION HIGHER
-parameters = DefaultParameters('precision', 20, 'avgCellDiameter', 50);
+parameters = DefaultParameters('precision', 12, 'avgCellDiameter', 50);
 parameters.debugLevel = 2;
 parameters.files.destinationDirectory = destDirSeg;
 parameters.files.background.imageFile = bgImageFullFilename;

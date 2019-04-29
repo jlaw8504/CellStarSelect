@@ -1,4 +1,4 @@
-function s = spotHeightStructure(matPattern, spbChannel, spindleBounds, zTilt, pixelSize, regionSize)
+function s = spotHeightStructure(matPattern, spbChannel, spindleBounds, zTilt, skewThresh, pixelSize, regionSize)
 %%spotHeightStructure Parses the cellStarSelect MAT-files and analyzes the cse4
 %%and spindle pole body foci.
 %
@@ -15,6 +15,9 @@ function s = spotHeightStructure(matPattern, spbChannel, spindleBounds, zTilt, p
 %
 %       zTilt : Integer specifying how many zPlanes the SPBs can be
 %       separated by.
+%
+%       skewThresh : A numeric variable indicating how skewed the foci
+%       signal intensity histogram must be. Suggested value of 0.5.
 %
 %       pixelSize : The size of a pixel in nanometers. 
 %
@@ -56,6 +59,7 @@ s.matPattern = matPattern;
 s.spbChannel = spbChannel;
 s.spindleBounds = spindleBounds;
 s.zTilt = zTilt;
+s.skewThresh = skewThresh;
 s.pixelSize = pixelSize;
 s.regionSize = regionSize;
 %% Data parsing, filtering, and foci height calculations
@@ -63,7 +67,7 @@ s.allDataCell = aggImages(s.matPattern);
 s.filterCell = filterSlength(...
     s.allDataCell, s.spbChannel, s.spindleBounds, s.zTilt, s.pixelSize);
 s.filterCell = filterPosition(s.filterCell, s.spbChannel, 5);
-s.filterCell = filterFoci(s.filterCell);
+s.filterCell = filterFoci(s.filterCell, s.skewThresh);
 s.HA = spotHeight(s.filterCell, s.regionSize, s.spbChannel);
 %% Kinetochore and SPB foci array height outlier removal
 % Collect kinetochore foci heights in single array

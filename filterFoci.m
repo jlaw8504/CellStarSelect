@@ -1,9 +1,12 @@
-function [filterCell, outlierCell] = filterFoci(dataCell)
+function [filterCell, outlierCell] = filterFoci(dataCell, skewThresh)
 %%fociFilter Filter cells in dataCell array based on the level of skew in
 %%the intensity values surrounding the detected foci's brightest pixel.
 %
 %   inputs :
 %       dataCell : The cell array outputted by aggImages function.
+%
+%       skewThresh : A numeric variable indicating how skewed the foci
+%       signal intensity histogram must be. Suggested value of 0.5.
 %
 %   outputs :
 %       filteredCell : A cell array containing only cells whose kinetochore
@@ -42,7 +45,7 @@ for n=2:size(dataCell,1)
 %         end
     end
 end
-keepArray = skewArray > 0.5;
+keepArray = skewArray > skewThresh;
 keepArray = sum(keepArray, 2);
 keepArray(1) = 1;
 keepArray = boolean(keepArray);
