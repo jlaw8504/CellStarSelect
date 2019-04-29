@@ -68,6 +68,7 @@ s.filterCell = filterSlength(...
     s.allDataCell, s.spbChannel, s.spindleBounds, s.zTilt, s.pixelSize);
 s.filterCell = filterPosition(s.filterCell, s.spbChannel, 5);
 s.filterCell = filterFoci(s.filterCell, s.skewThresh);
+s.filterCell = filterFuzz(s.filterCell, s.spbChannel);
 s.HA = spotHeight(s.filterCell, s.regionSize, s.spbChannel);
 %% Kinetochore and SPB foci array height outlier removal
 % Collect kinetochore foci heights in single array
