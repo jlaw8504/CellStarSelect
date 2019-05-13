@@ -53,6 +53,12 @@ function s = spotHeightStructure(matPattern, spbChannel, spindleBounds, zTilt, s
 %
 %           s.sHnoOutnm : An array of spindle pole body foci heights
 %           without outliers. Outliers determined by isoutlier function.
+%
+%           s.kkDistancenm : An array of kinetochore to kinetchore
+%           distances in 2D (X and Y) in nm.
+%
+%           s.sLengthsnm : An array of SPB to SPB distances in 2D (X and Y)
+%           in nm.
 
 %% Store input variables
 s.matPattern = matPattern;
@@ -77,8 +83,9 @@ s.kHnm = s.kH * pixelSize;
 % Collect SPB foci heights in single array
 s.sH = [s.HA.sHeights1; s.HA.sHeights2];
 s.sHnm = s.sH * pixelSize;
-% Convert spindle lengths to nm
+% Convert spindle lengths and kk distnace to nm
 s.sLengthsnm = s.HA.sLengths * s.pixelSize;
+s.kkDistancenm = s.HA.kkDistance * s.pixelSize;
 %filter out outliers using while loop and ~isoutlier
 s.kHnoOutnm = noArrayOutliers(s.kHnm);
 s.sHnoOutnm = noArrayOutliers(s.sHnm);

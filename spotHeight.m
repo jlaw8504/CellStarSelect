@@ -13,8 +13,9 @@ function heightArray = spotHeight(dataCell, regionSize, spbChannel)
 %
 %   Outputs :
 %       heightArray = Structural array containing the spot heights, in
-%       pixels, of the two kinetochore foci, the two SPB foci, and each
-%       foci's Gaussian fit R squared value for post hoc filtering.
+%       pixels, of the two kinetochore foci, the two SPB foci, each
+%       foci's Gaussian fit R squared value for post hoc filtering, 2D
+%       spindle length, and 2D kkdistance.
 
 %% Loop over data in dataCell
 %pre-allocate structural array
@@ -28,6 +29,7 @@ heightArray.kHeightsRsq2 = zeros([num, 1]);
 heightArray.sHeightsRsq1 = zeros([num, 1]);
 heightArray.sHeightsRsq2 = zeros([num, 1]);
 heightArray.sLengths = zeros([num,1]);
+heightArray.kkDistance=zeros([num,1]);
 %% Check that regionSize is at least 15 pixels
 if regionSize < 15
     error('Set regionSize to value of 15 pixels or greater');
@@ -65,6 +67,7 @@ for n = 2:size(dataCell,1)
     imSpb2 = extractFoci(spb2, spbIm, regionSize);
     %% Rotate the foci images
     spbSub = spb1 - spb2;
+    kkSub = kinet1-kinet2;
     theta = atan2(spbSub(1), spbSub(2));
     rotKinet1 = imrotate(imKinet1, rad2deg(theta));
     rotKinet2 = imrotate(imKinet2, rad2deg(theta));
@@ -76,7 +79,8 @@ for n = 2:size(dataCell,1)
     [heightArray.sHeights1(n-1), heightArray.sHeightsRsq1(n-1)] = calcFwhm(rotSpb1);
     [heightArray.sHeights2(n-1), heightArray.sHeightsRsq2(n-1)] = calcFwhm(rotSpb2);
     %% Calculate the 2D Spindle Length in Pixels
-    heightArray.sLengths(n-1) = norm(spbSub);
+    heightArray.sLengths(n-1) = norm(spbSub(1:2));
+    heightArray.kkDistance(n-1)= norm(kkSub(1:2));
     %% Update waitbar
     waitbar(n/num);
 end
