@@ -25,7 +25,8 @@ else
     error('spbChannel must be 1 or 2');
 end
 %% Iterate over the dataCell array
-for n = 2:170
+mipArray = cell([(size(dataCell,1)-1),1]);
+for n = 2:size(dataCell, 1)
 mip = max(dataCell{n,stackCol},[], 3);
 padMip = padarray(mip,[24 24], 'replicate', 'both');
 midCoords = floor((...

@@ -1,4 +1,4 @@
-function rotCellArray =  rotateAllCoords(cellArray, spbChannel)
+function [rotCellArray,allYs] =  rotateAllCoords(cellArray, spbChannel)
 %%rotCellArray Rotates coordinates in cellArray by setting the spindle pole
 %%bodies to the X-axis with the first SPB coordinate set at the origin.
 %
@@ -25,6 +25,7 @@ rotCellArray(1,:) = {'Rotated Image1 Spot1',...
     'Rotated Image2 Spot2'...
     };
 rot = zeros([4,2]);
+allYs = zeros((size(cellArray,1)-1)*2, 1);
 %% Loop through each row of cellArray, except first/labeling row
 for n = 2:size(cellArray,1)
     %grab the Y and X and put into matrix, columns are Y X
@@ -58,18 +59,31 @@ for n = 2:size(cellArray,1)
     rotCellArray{n,2} = rot(2,:);
     rotCellArray{n,3} = rot(3,:);
     rotCellArray{n,4} = rot(4,:);
-    %% Visualize rotations
-    if n == 2
-        figure;
-        scatter(rot(1:2,2), rot(1:2,1), 'rx');
-        scatter(rot(3:4,2), rot(3:4,1), 'go');
-        hold on;
-    elseif n == size(cellArray,1)
-        scatter(rot(1:2,2), rot(1:2,1), 'rx');
-        scatter(rot(3:4,2), rot(3:4,1), 'go');
-        hold off;
-    else
-        scatter(rot(1:2,2), rot(1:2,1), 'rx');
-        scatter(rot(3:4,2), rot(3:4,1), 'go');
+    %% Put origin proximal foci in col 3 and distal in col 4
+    distf1=norm(rotCellArray{n,3});
+    distf2=norm(rotCellArray{n,4});
+    if distf1<=distf2
+       rotCellArray{n,3}=rot(3,:);
+       rotCellArray{n,4}=rot(4,:);
+    elseif distf1>distf2 
+         rotCellArray{n,4}=rot(3,:);
+         rotCellArray{n,3}=rot(4,:);         
     end
+    %% collect all y's
+    allYs(n+(n-3)) = rotCellArray{n,3}(1);
+    allYs(n+(n-2)) = rotCellArray{n,4}(1);
+%     %% Visualize rotations
+%     if n == 2
+%         figure;
+%         scatter(rotCellArray{n,1}(1), rotCellArray{n,1}(2), 'rx');
+%         scatter(rotCellArray{n,4}(1), rotCellArray{n,4}(2), 'go');
+%         hold on;
+%     elseif n == size(cellArray,1)
+%         scatter(rotCellArray{n,1}(1), rotCellArray{n,1}(2), 'rx');
+%         scatter(rotCellArray{n,4}(1), rotCellArray{n,4}(2), 'go');
+%         hold off;
+%     else
+%         scatter(rotCellArray{n,1}(1), rotCellArray{n,1}(2), 'rx');
+%         scatter(rotCellArray{n,4}(1), rotCellArray{n,4}(2), 'go');
+%     end
 end
