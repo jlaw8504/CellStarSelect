@@ -1,0 +1,161 @@
+<html>
+<body style="margin-top:5%; margin-bottom:5%; margin-left:25%; margin-right:25%; font-family:arial, sans-serif; font-size:15px; text-align:left; line-height:1.3em; letter-spacing:0.1em">
+<hr>
+
+<p>
+	<h2>MatBots</h2>
+</p>
+
+<p>
+  <a href="https://github.com/HMS-IDAC/MatBots">Code</a> (GitHub) |
+  <a href="http://www.biorxiv.org/content/early/2017/08/03/172296">Paper</a> (bioRxiv)
+</p>
+
+<p>
+MatBots are primitive AIs, 'assistants' if you will, that use minimalistic GUI dialogs to guide the user through a data processing pipeline in Matlab.
+</p>
+
+<p>
+Isn't that an 'app'? Bots are much more restrictive than apps. Users are, to a greater extent than in an app, guided through the correct steps to perform a task. A bot usually performs a much more limited task than an app.
+</p>
+
+<p>
+When possible, bots have a 'headless' mode, which allows them to execute a processing pipeline as a typical Matlab function, either on an image or a folder of images.
+</p>
+
+<p>
+<a href="MatBots.png"> <img src="MatBots.png" width="100%" border="0" /> </a>
+</p>
+
+<p>
+The first crop of bots perform selected biological-image-analysis pipelines,
+such as nuclei segmentation and point-source scoring. Source code and more details
+are <a href="https://github.com/HMS-IDAC/MatBots">available on GitHub</a>.
+Below is a list of currently implemented bots, with links to video tutorials and sample datasets
+when available.
+</p>
+
+<p>
+    For even more details, and to cite this work, please refer to the
+    <a href="http://www.biorxiv.org/content/early/2017/08/03/172296">bioRxiv manuscript</a>.
+</p>
+
+<p>
+    Clone the
+    <a href="https://github.com/HMS-IDAC/MatBots">GitHub repository</a> to access all bots and tools.
+    Individual, self-contained bots and tools can be downloaded from
+    <a href="https://www.mathworks.com/matlabcentral/profile/authors/8454226-marcelo-cicconet">File Exchange</a>.
+</p>
+
+<hr>
+
+<p>
+	<h3>SpotsInNucleiBot</h3>
+</p>
+<p>
+	A bot to count point sources (spots) in nuclei.
+</p>
+<p>
+	<a href="https://youtu.be/63Ybf4IPYXo">Video Tutorial</a> |
+	<a href="https://www.dropbox.com/s/yaazjxdwasukmjw/Stacks.zip?dl=0">Sample Data</a>
+</p>
+
+<hr>
+<p>
+	<h3>NucleiSegmentationBot</h3>
+</p>
+<p>
+	Assists in training a Machine Learning model to segment nuclei.
+</p>
+<p>
+	<a href="https://youtu.be/pMjHfrK13RU">Video Tutorial</a> |
+	<a href="https://www.dropbox.com/s/eiyerynv6mkct8c/Nuclei.zip?dl=0">Sample Data</a>
+</p>
+<p>
+	For Machine Learning experts: the source code to train a stacked Random Forest for nuclei segmentation,
+	using circularity features, is available <a href="https://hms-idac.github.io/MLRFSwCF/">here</a>. This algorithm is used as the back-end for pixel classification in NucleiSegmentationBot.
+</p>
+
+<hr>
+<p>
+    <h3>PixelClassificationBot</h3>
+</p>
+<p>
+    Assists in training a Machine Learning model to segment grayscale images.
+    This is a more general implementation of NucleiSegmentationBot.
+</p>
+<p>
+    <a href="https://youtu.be/QS1ak-Xwu04">Video Tutorial</a> |
+    <a href="https://www.dropbox.com/s/85aszvi1veh1m14/SmallNuclei.zip?dl=0">Sample Data</a>
+</p>
+
+<hr>
+<p>
+    <h3>ImageAnnotationBot</h3>
+</p>
+<p>
+    A stand-alone bot to annotate images (the same used as a module in PixelClassificationBot and NucleiSegmentationBot).
+</p>
+
+<hr>
+<p>
+    <h3>VolumeAnnotationBot</h3>
+</p>
+<p>
+    Analogous to ImageAnnotationBot for 3D volumes.
+</p>
+
+<hr>
+<p>
+    <h3>StackPackBot</h3>
+</p>
+<p>
+    A bot to make stacks out of image planes. This can be used to assemble stacks for SpotsInNucleiBot.
+</p>
+<p>
+    <a href="https://youtu.be/d4-69DEYcAs">Video Tutorial</a> |
+    <a href="https://www.dropbox.com/s/rpzm0gfc7gydagq/Planes.zip?dl=0">Sample Data</a>
+</p>
+
+<hr>
+<p>
+    <h3>SpotMeasureBot</h3>
+</p>
+<p>
+    A bot to measure the size of spot-like (including diffraction-limited) objects.
+</p>
+
+<hr>
+<p>
+    <h3>ThresholdSegmentationBot</h3>
+</p>
+<p>
+    Assists in segmenting objects using a simple 3-step pipeline consisting of
+    (1) smoothing, (2) thresholding, and (3) watershed on distance transform.
+    Allows post-processing operations to filter masks based on area/eccentricity,
+    and grow or shrink objects by a constant amount.
+</p>
+<p>
+    <a href="https://youtu.be/0ylCDfWzJS0">Video Tutorial</a> |
+    <a href="https://www.dropbox.com/s/eiyerynv6mkct8c/Nuclei.zip?dl=0">Sample Data</a>
+</p>
+
+<hr>
+<br>
+<p style="font-size:75%;">
+	For questions and feedback, contact <a href="http://marceloc.net">Marcelo</a>.
+</p>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-102260382-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+</body>
+</html>
