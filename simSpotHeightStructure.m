@@ -1,4 +1,4 @@
-function s = spotHeightStructure(matPattern, spbChannel, spindleBounds, zTilt, skewThresh, pixelSize, regionSize)
+function s = simSpotHeightStructure(directory, field1nopattern, field2nopattern, imagepattern, spbChannel, spindleBounds, zTilt, skewThresh, pixelSize, regionSize)
 %%spotHeightStructure Parses the cellStarSelect MAT-files and analyzes the cse4
 %%and spindle pole body foci.
 %
@@ -61,7 +61,7 @@ function s = spotHeightStructure(matPattern, spbChannel, spindleBounds, zTilt, s
 %           in nm.
 
 %% Store input variables
-s.matPattern = matPattern;
+s.name_struct = image_name_match(directory, field1nopattern, field2nopattern, imagepattern);
 s.spbChannel = spbChannel;
 s.spindleBounds = spindleBounds;
 s.zTilt = zTilt;
@@ -69,22 +69,19 @@ s.skewThresh = skewThresh;
 s.pixelSize = pixelSize;
 s.regionSize = regionSize;
 %% Data parsing, filtering, and foci height calculations
-s.allDataCell = aggImages(s.matPattern);
+s.allDataCell = aggSimImagesModified(s.name_struct);
 s.filterCell = filterSlength(...
     s.allDataCell, s.spbChannel, s.spindleBounds, s.zTilt, s.pixelSize);
 s.filterCell = filterPosition(s.filterCell, s.spbChannel, 5);
 s.filterCell = filterFoci(s.filterCell, s.skewThresh);
 s.filterCell = filterFuzz(s.filterCell, s.spbChannel);
-s.HA = spotHeight(s.filterCell, s.regionSize, s.spbChannel);
+s.HA = spotHeightModified(s.filterCell, s.regionSize, s.spbChannel);
 %% Kinetochore and SPB foci array height outlier removal
 % Collect kinetochore foci heights in single array
 s.kH = [s.HA.kHeights1; s.HA.kHeights2];
-% Remove Nans
-s.kH = s.kH(~isnan(s.kH));
 s.kHnm = s.kH * pixelSize;
 % Collect SPB foci heights in single array
 s.sH = [s.HA.sHeights1; s.HA.sHeights2];
-s.sH = s.sH(~isnan(s.sH));
 s.sHnm = s.sH * pixelSize;
 % Convert spindle lengths and kk distnace to nm
 s.sLengthsnm = s.HA.sLengths * s.pixelSize;
