@@ -15,6 +15,8 @@ function parameters =  batchCellStar(transImageDir, filePattern, destDirSeg, bgI
 %roughly 6 microns
 %UPDATE JANUARY 28, 2019, KEEPS PICKING SUBSTRUCTURES INSIDE CELLS
 %USING 140 PIXELS TO SKEW SELECTION HIGHER
+%UPDATE FEB, 2021, USE 95 PX TO INCREASE SELECTION, 140 ACTUALLY RESULTS IN
+%FEWER MITOTIC CELLS
 parameters = DefaultParameters('precision', 20, 'avgCellDiameter', 95);
 parameters.debugLevel = 2;
 parameters.files.destinationDirectory = destDirSeg;

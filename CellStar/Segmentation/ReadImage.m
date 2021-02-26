@@ -22,7 +22,11 @@ function [m, originalImDim] = ReadImage(fileName, transform, debugLevel, interfa
   if islogical(m)
       imax = 1;
   else
-      imax = intmax(class(m));
+      try
+        imax = intmax(class(m));
+      catch
+        imax = intmax(class(uint16(m)));
+      end
   end
   % Octave bug/incompatibility: boolean images are int8 and not logical
   if (max(m(:)) > 1)
