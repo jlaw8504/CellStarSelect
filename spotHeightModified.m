@@ -75,10 +75,10 @@ for n = 2:size(dataCell,1)
     rotSpb1 = extractFoci(SPB1(1:3), finalspb, regionSize);
     rotSpb2 = extractFoci(SPB2(1:3), finalspb, regionSize);
     %% Calculate the FWHM of the rotated images
-    [heightArray.kHeights1(n-1), heightArray.kHeightsRsq1(n-1)] = calcFwhm(rotKinet1, regionSize);
-    [heightArray.kHeights2(n-1), heightArray.kHeightsRsq2(n-1)] = calcFwhm(rotKinet2, regionSize);
-    [heightArray.sHeights1(n-1), heightArray.sHeightsRsq1(n-1)] = calcFwhm(rotSpb1, regionSize);
-    [heightArray.sHeights2(n-1), heightArray.sHeightsRsq2(n-1)] = calcFwhm(rotSpb2, regionSize);
+    [heightArray.kHeights1(n-1), heightArray.kHeightsRsq1(n-1)] = calcFwhm(rotKinet1);
+    [heightArray.kHeights2(n-1), heightArray.kHeightsRsq2(n-1)] = calcFwhm(rotKinet2);
+    [heightArray.sHeights1(n-1), heightArray.sHeightsRsq1(n-1)] = calcFwhm(rotSpb1);
+    [heightArray.sHeights2(n-1), heightArray.sHeightsRsq2(n-1)] = calcFwhm(rotSpb2);
     %% Calculate the 2D Spindle Length in Pixels
     spbSub = spb1 - spb2;
     kkSub = kinet1-kinet2;
