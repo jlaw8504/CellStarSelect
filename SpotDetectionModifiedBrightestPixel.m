@@ -1,4 +1,4 @@
-function [ spotStructArray ] = SpotDetectionModified( stack1Filename, stack2Filename, stack3filename )
+function [ spotStructArray ] = SpotDetectionModifiedBrightestPixel( stack1Filename, stack2Filename, stack3filename )
 %spotDetection Automatic spot detection for two channels
 %
 
@@ -120,9 +120,9 @@ for n = 1:size(im1Mat,3)/spotStructArray.zsteps
     %% Locate cells with two foci in each channel
 %     [img1Spots, img2Spots, xyList, polygonList] = ...
 %         locateTwoSpotImagesModified(data.snakes, mip1, mip2);
-    ptSrcImg1  = advPointSourceDetection(mip1, 2, 0);
-    ptSrcImg2  = advPointSourceDetection(mip2, 2, 0);
-    ptSrcImg3  = advPointSourceDetection(mip3, 2, 0);
+    ptSrcImg1  = JustBrightestPixel(mip1);
+    ptSrcImg2  = JustBrightestPixel(mip2);
+    ptSrcImg3  = JustBrightestPixel(mip3);
     if (numel(find(ptSrcImg1))~=2)||(numel(find(ptSrcImg2))~=2)||(numel(find(ptSrcImg3))~=2)
 %         spotStructArray.KickedOut{counter,1} = stack1Filename((length(stack1Filename)-16):end);
 %         counter=counter+1;

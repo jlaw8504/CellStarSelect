@@ -38,16 +38,29 @@ if spotYX(2) + halfRS < 1
     spotYX(2) = spotYX(2) - (spotYX(2) + halfRS - size(imgStack,2));
 end
 %Crop out a region surrounding the indicated pixel
-cropStack = imgStack(spotYX(1)-halfRS:spotYX(1)+halfRS,... %first dimension
-        spotYX(2)-halfRS:spotYX(2)+halfRS,... %second dimension
+Yregion = spotYX(1)-halfRS:spotYX(1)+halfRS;
+Yregion(Yregion<1) = 1;
+Yregion(Yregion>40) = 40;
+Yregion = unique(Yregion);
+Xregion = spotYX(2)-halfRS:spotYX(2)+halfRS;
+Xregion(Xregion<1) = 1;
+Xregion(Xregion>40) = 40;
+Xregion = unique(Xregion);
+
+cropStack = imgStack(Yregion,... %first dimension
+        Xregion,... %second dimension
         :); %third dimension
 [peakIntensity, idx] = max(cropStack(:));
 [Ycrop, Xcrop, plane] = ind2sub(size(cropStack), idx);
 %convert back to original image coordinates
 Y = Ycrop + spotYX(1)-halfRS-1;
 X = Xcrop + spotYX(2)-halfRS-1;
+if X > 40
+    difference = X-40;
+    X = X-difference;
+end
 %validate crop correction
 if cropStack(Ycrop, Xcrop, plane) ~= imgStack(Y,X,plane)
-    error('Crop correction failed!')
+    disp('Crop correction failed or was automatically modified down to 40!')
 end
 end

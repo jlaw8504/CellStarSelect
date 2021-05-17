@@ -27,7 +27,7 @@ for n = 1:length(file_struct)
     cell_array{3,n} = split{7};
     cell_array{4,n} = split{8};
 end
-%create a cell array that ahs values sorted numerically (will be 00001,
+%create a cell array that has values sorted numerically (will be 00001,
 %etc.)
 sorted_array = unique(cell_array);
 cnt1 = 1;

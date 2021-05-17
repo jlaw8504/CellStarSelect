@@ -7,9 +7,9 @@ function filterCell = filterFuzz(dataCell, spbChannel)
 keepArray = ones([size(dataCell,1), 1]);
 %% Set column index based on spbChannel variable
 if spbChannel == 1
-    cIdx = 5;
+    cIdx = 7;
 elseif spbChannel == 2
-    cIdx = 6;
+    cIdx = 8;
 else
     error('spbChannel should be either 1 or 2');
 end

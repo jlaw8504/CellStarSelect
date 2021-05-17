@@ -1,4 +1,4 @@
-function [allDataCell,KickedOut] = aggSimImagesModified(name_struct)
+function [allDataCell,KickedOut] = aggSimImagesModifiedBrightestPixel(name_struct)
 %aggImagesModified Aggreated coordinate information and filtered image stacks into
 %a single cell array
 %   Function loops over all the MAT files contianing the spotStructArray
@@ -23,7 +23,7 @@ counter = 1;
 f = waitbar(0, 'Parsing images now');
 KickedOut = {};
 for n = 1:numel(name_struct)
-    spotStructArray = SpotDetectionModified(name_struct(n).fieldone, name_struct(n).fieldtwo, name_struct(n).fieldthree);
+    spotStructArray = SpotDetectionModifiedBrightestPixel(name_struct(n).fieldone, name_struct(n).fieldtwo, name_struct(n).fieldthree);
     if size(spotStructArray.dataCell, 1)~= 2
         KickedOut{counter,1} = n; %#ok<AGROW>
         counter=counter+1;

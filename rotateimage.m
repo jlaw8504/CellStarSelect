@@ -35,10 +35,21 @@ function [finalimage, imSPB1, imSPB2] = rotateimage(image, spb1, spb2)
     RotatedP1coords = [RotatedP1(2),RotatedP1(1)];
     RotatedP2 = round(RotMatrix*(P2 - imagecenter)) + imagecenter;
     RotatedP2coords = [RotatedP2(2),RotatedP2(1)];
+    if (rot(1)>40)
+        error('changing an image')
+        difference1 = rot(1) - 40;
+        rot(1) = rot(1)-difference1;
+    end
+    if (rot(2)>40)
+        error('changing an image')
+        difference2 = rot(2) - 40;
+        rot(2) = rot(2)-difference2;
+    else
     [SPB1y,SPB1x,plane1,peakIntensity1] = findVoxelModified(RotatedP1coords, rot, 5); %FLIP roratedP1
     imSPB1 = [SPB1y,SPB1x,plane1,peakIntensity1];
     [SPB2y,SPB2x,plane2,peakIntensity2] = findVoxelModified(RotatedP2coords, rot, 5);
     imSPB2 = [SPB2y,SPB2x,plane2,peakIntensity2];
+    end
     %[SPB2y, SPB2x] = ind2sub(size(finalimage), find(finalimage(:,:,spb2(3)) == spbmax2));
     %imSPB2 = [SPB2y, SPB2x, spb2(3)];
 end

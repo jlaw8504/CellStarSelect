@@ -16,17 +16,19 @@ function batchSelectionMod(flPattern1, flPattern2)
 
 %% Parse working directory for filenames
 flStruct1 = dir(flPattern1);
+flFiles1 = {flStruct1(:).name};
 flStruct2 = dir(flPattern2);
+flFiles2 = {flStruct2(:).name};
 %% Check if file cell arrays contain the same number of elements
-if ~(numel(flStruct1) == numel(flStruct2))
+if ~(numel(flFiles1) == numel(flFiles2))
     error('Number of image files (i.e. green to red images) does not match!');
 end
 
-for n = 1:numel(flStruct1)
+for n = 1:numel(flFiles1)
     spotStructArray = SpotDetectionModified(...
-        fullfile(flStruct1(n).folder, flStruct1(n).name),...
-        fullfile(flStruct2(n).folder, flStruct2(n).name));
-    [~, basename, ~] = fileparts(flStruct1(n).name);
+        flFiles1{n},...
+        flFiles2{n});
+    [~, basename, ~] = fileparts(flFiles1{n});
     save(strcat(basename, '.mat'), 'spotStructArray');
     clear spotStructArray
 end
