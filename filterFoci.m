@@ -21,11 +21,13 @@ skewArray = ones([size(dataCell,1), 4]);
 
 %% %% Loop over dataCell array
 for n=2:size(dataCell,1)
-    for i = 1:4 %iterate over foci columns
+    for i = 1:6 %iterate over foci columns
         if i < 3
-            col = 5;
+            col = 7;
+        elseif (i>=3) && (i<5)
+            col = 8;
         else
-            col = 6;
+            col = 9;
         end
         infPlane = dataCell{n,col}(:,:,dataCell{n,i}(3));
         padPlane = padarray(infPlane, [3,3], 'both', 'symmetric');
