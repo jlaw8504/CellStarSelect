@@ -1,4 +1,4 @@
-function allDataCell = aggMats(matPattern)
+function all_data_cell = agg_mats(matPattern)
 %aggMats Aggregate dataCell variable from MAT files contianing the
 %spotStructArray
 %   Function uses MATLAB's recursive dir file search (2016b and newer) to
@@ -10,22 +10,22 @@ matFiles = dir(matPattern);
 num = 0;
 for n = 1:numel(matFiles)
     fullFilename = fullfile(matFiles(n).folder, matFiles(n).name);
-    load(fullFilename, 'spotStructArray');
-    dataCell = spotStructArray.dataCell;
+    load(fullFilename, 'spot_struct_array');
+    dataCell = spot_struct_array.data_cell;
     dataNum = size(dataCell,1) - 1;
     num = num + dataNum;
 end
 %% Create allDataCell array
-allDataCell = cell([num + 1, size(spotStructArray.dataCell,2)]); % +1 is for label row
-allDataCell(1,:) = spotStructArray.dataCell(1,:);
+all_data_cell = cell([num + 1, size(spot_struct_array.data_cell,2)]); % +1 is for label row
+all_data_cell(1,:) = spot_struct_array.data_cell(1,:);
 %% Loop through all files again to place the data in allDataCell
 %instantiate counter
 cnt = 2; % to prevent label row overwrite
 for n = 1:numel(matFiles)
     fullFilename = fullfile(matFiles(n).folder, matFiles(n).name);
-    load(fullFilename, 'spotStructArray');
-    for i = 1:(size(spotStructArray.dataCell,1)-1)
-        allDataCell(cnt,:) = spotStructArray.dataCell(i+1,:);
+    load(fullFilename, 'spot_struct_array');
+    for i = 1:(size(spot_struct_array.data_cell,1)-1)
+        all_data_cell(cnt,:) = spot_struct_array.data_cell(i+1,:);
         cnt = cnt +1;
     end
 end

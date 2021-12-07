@@ -80,7 +80,7 @@ for n = 1:size(im_mat_1,3)/z_steps
         filter_array(i+1,1) = filter_array(i);
     end
     %convert filterArray to logical
-    filter_array = boolean(filter_array);
+    filter_array = logical(filter_array);
     if sum(filter_array) > 0
         brights_1 = bp1(filter_array,:);
         brights_2 = bp2(filter_array,:);

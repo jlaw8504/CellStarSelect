@@ -48,7 +48,7 @@ end
 keepArray = skewArray > skewThresh;
 keepArray = sum(keepArray, 2);
 keepArray(1) = 1;
-keepArray = boolean(keepArray);
+keepArray = logical(keepArray);
 outArray = ~keepArray;
 outArray(1) = 1;
 filterCell = dataCell(keepArray,:);

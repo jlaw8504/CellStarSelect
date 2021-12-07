@@ -34,7 +34,7 @@ end
 
 %% Pre-allocate logical arrays
 %deliberately set the first column to one to catch the label row
-posArray = boolean(ones([1, size(dataCell,1)]));
+posArray = true([1, size(dataCell,1)]);
 
 %% Loop over dataCell array
 for n=2:size(dataCell,1)
