@@ -42,6 +42,7 @@ for n = 2:size(allDataCell,1)
             title('Image 2, Spot 2');
         end
     end
+    sgtitle(sprintf('Row Index: %d', n))
     waitforbuttonpress;
     
 end
